@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="eMudhra CA Certificate Incident — Developer Remediation Checklist, updated 22 October 2026.">
+  <title>eMudhra CA Certificate Incident — Developer Remediation Checklist</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1d2939;
+      --muted: #475467;
+      --line: #d0d5dd;
+      --paper: #ffffff;
+      --canvas: #f2f4f7;
+      --blue: #175cd3;
+      --blue-soft: #eff8ff;
+      --amber: #92400e;
+      --amber-soft: #fffaeb;
+      --code: #101828;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font: 16px/1.65 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .page {
+      width: min(100% - 32px, 1000px);
+      margin: 32px auto;
+      padding: clamp(22px, 5vw, 56px);
+      background: var(--paper);
+      border: 1px solid #eaecf0;
+      border-radius: 14px;
+      box-shadow: 0 8px 28px rgba(16, 24, 40, .06);
+    }
+    header { border-bottom: 3px solid var(--blue); padding-bottom: 24px; margin-bottom: 32px; }
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--blue);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    h1 { margin: 0; font-size: clamp(2rem, 5vw, 3.1rem); line-height: 1.12; letter-spacing: -.035em; }
+    .updated { margin: 14px 0 0; color: var(--muted); font-weight: 650; }
+    h2 { margin: 42px 0 16px; padding-bottom: 9px; border-bottom: 1px solid var(--line); font-size: clamp(1.45rem, 3vw, 1.9rem); line-height: 1.25; }
+    h3 { margin: 28px 0 10px; font-size: 1.15rem; }
+    p { margin: 12px 0; }
+    ul, ol { padding-left: 1.5rem; }
+    li { margin: 7px 0; }
+    a { color: #175cd3; overflow-wrap: anywhere; }
+    .refs li { margin: 9px 0; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: .92em;
+      overflow-wrap: anywhere;
+    }
+    p code, li code, td code { padding: .12em .32em; border-radius: 4px; background: #f2f4f7; }
+    pre {
+      position: relative;
+      overflow-x: auto;
+      margin: 12px 0 20px;
+      padding: 18px;
+      border-radius: 9px;
+      background: var(--code);
+      color: #f2f4f7;
+      font: .9rem/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      tab-size: 4;
+      white-space: pre;
+    }
+    pre code { font: inherit; overflow-wrap: normal; }
+    .callout {
+      margin: 18px 0;
+      padding: 15px 18px;
+      border-left: 4px solid var(--blue);
+      border-radius: 0 7px 7px 0;
+      background: var(--blue-soft);
+    }
+    .warning {
+      border-left-color: #d97706;
+      background: var(--amber-soft);
+    }
+    .callout p:first-child { margin-top: 0; }
+    .callout p:last-child { margin-bottom: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0 20px; }
+    th, td { text-align: left; border: 1px solid var(--line); padding: 10px 12px; }
+    th { background: #f9fafb; }
+    .checklist { list-style: none; padding: 0; }
+    .checklist li { position: relative; padding-left: 30px; margin: 11px 0; }
+    .checklist li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .28em;
+      width: 17px;
+      height: 17px;
+      border: 1.5px solid #667085;
+      border-radius: 4px;
+      background: #fff;
+    }
+    footer { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+    .toolbar { display: flex; justify-content: flex-end; margin-bottom: 18px; }
+    button {
+      border: 1px solid #b2ccff;
+      border-radius: 8px;
+      padding: 9px 13px;
+      background: #eff8ff;
+      color: #1849a9;
+      font: inherit;
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:hover { background: #dbeafe; }
+    @media (max-width: 600px) {
+      .page { width: 100%; margin: 0; padding: 22px 18px 34px; border: 0; border-radius: 0; }
+      pre { padding: 14px; font-size: .82rem; }
+      th, td { padding: 8px; }
+    }
+    @media print {
+      body { background: #fff; font-size: 10.5pt; }
+      .page { width: 100%; margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; }
+      .toolbar { display: none; }
+      h2, h3 { break-after: avoid; }
+      pre, table, .callout { break-inside: avoid; }
+      pre { white-space: pre-wrap; overflow-wrap: anywhere; color: #111; background: #f3f4f6; border: 1px solid #d0d5dd; }
+      a { color: #111; text-decoration: underline; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="toolbar"><button type="button" onclick="window.print()">Print / Save as PDF</button></div>
+    <header>
+      <p class="eyebrow">Technical Security Advisory</p>
+      <h1>eMudhra CA Certificate Incident — Developer Remediation Checklist</h1>
+      <p class="updated">Updated: 22 October 2026</p>
+    </header>
+
+    <section id="what-happened">
+      <h2>1. What happened?</h2>
+      <p>Eight eMudhra intermediate Certificate Authority (CA) private keys were found to be compromised because they were generated with insufficient randomness. An attacker possessing those keys could potentially create fraudulent HTTPS certificates.</p>
+      <p>The remediation goal is to ensure that operating systems, browsers, command-line tools and application runtimes reject affected certificate chains.</p>
+      <h3>Official incident references</h3>
+      <ul class="refs">
+        <li><strong>Cloudflare:</strong> <a href="https://blog.cloudflare.com/emudhra-certificate-compromise/">https://blog.cloudflare.com/emudhra-certificate-compromise/</a></li>
+        <li><strong>Mozilla:</strong> <a href="https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/">https://blog.mozilla.org/security/2026/10/20/protecting-firefox-users-following-the-compromise-of-emudhra-intermediate-certificates/</a></li>
+        <li><strong>Google:</strong> <a href="https://blog.google/security/protecting-chrome-and-android-users-from-compromised-emudhra-intermediate-ca-certificates/">https://blog.google/security/protecting-chrome-and-android-users-from-compromised-emudhra-intermediate-ca-certificates/</a></li>
+        <li><strong>eMudhra's statement:</strong> <a href="https://emudhra.com/en/post/certificate-security-incident">https://emudhra.com/en/post/certificate-security-incident</a></li>
+      </ul>
+    </section>
+
+    <section id="macos">
+      <h2>2. macOS — command-line certificate trust</h2>
+      <h3>A. Inspect the current CA bundle</h3>
+      <p>Open Terminal:</p>
+      <pre><code>sw_vers
+curl --version
+grep -nE 'AAA Certificate Services|emSign ECC Root CA - G3' \
+  /etc/ssl/cert.pem</code></pre>
+
+      <h3>B. Create a separate CA bundle</h3>
+      <p>On the Mac tested, we created a user-level bundle that excludes the two root entries associated with the incident. This does not modify Apple's system certificate file.</p>
+      <p><strong>Back up the original bundle:</strong></p>
+      <pre><code>cp /etc/ssl/cert.pem "$HOME/cert.pem.backup"</code></pre>
+      <p><strong>Create the filtered bundle:</strong></p>
+      <pre><code>awk '
+/^=== .*\/CN=(AAA Certificate Services|emSign ECC Root CA - G3)$/ {
+    skip=1
+    next
+}
+/^=== / {
+    skip=0
+}
+!skip {
+    print
+}
+' /etc/ssl/cert.pem > "$HOME/.ca-cert.pem"</code></pre>
+      <p><strong>Check that the two entries are absent:</strong></p>
+      <pre><code>grep -nE 'AAA Certificate Services|emSign ECC Root CA - G3' \
+  "$HOME/.ca-cert.pem"</code></pre>
+      <p>This should return no matches. Validate the bundle before using it broadly. This is a targeted workaround, not an official universal fix for every macOS TLS client.</p>
+
+      <h3>C. Test before configuring the shell</h3>
+      <p><strong>Affected test endpoint:</strong></p>
+      <pre><code>curl --cacert "$HOME/.ca-cert.pem" -v \
+  https://dv-g3b-emudhra.we-have-a-problem.com/</code></pre>
+      <p><strong>Legitimate endpoint:</strong></p>
+      <pre><code>curl --cacert "$HOME/.ca-cert.pem" -I https://www.apple.com</code></pre>
+      <p><strong>Expected results:</strong></p>
+      <ul>
+        <li>The affected test chain should fail certificate verification.</li>
+        <li>The legitimate Apple HTTPS request should succeed.</li>
+      </ul>
+
+      <h3>D. Configure common command-line tools</h3>
+      <p>After validating the bundle, add the following to <code>~/.zshrc</code>:</p>
+      <pre><code>export SSL_CERT_FILE="$HOME/.ca-cert.pem"
+export CURL_CA_BUNDLE="$HOME/.ca-cert.pem"
+export GIT_SSL_CAINFO="$HOME/.ca-cert.pem"</code></pre>
+      <p><strong>Apply the settings:</strong></p>
+      <pre><code>source "$HOME/.zshrc"</code></pre>
+      <p>Test curl and Git again.</p>
+      <div class="callout warning"><p><strong>Limitations:</strong> These environment variables do not control every macOS application. Applications using Apple's Security framework, a private trust store, or a bundled CA bundle may behave differently. Do not assume this workaround replaces macOS security updates or runtime-specific patches.</p></div>
+    </section>
+
+    <section id="python">
+      <h2>3. Python — macOS, Windows and Linux</h2>
+      <p>Python projects may use certifi, the OS trust store or custom certificate configuration.</p>
+      <h3>Required package updates</h3>
+      <p>The Python Packaging security guidance recommends:</p>
+      <ul>
+        <li><code>certifi 2026.10.19</code> or later</li>
+        <li><code>pip 26.2.2</code> or later</li>
+        <li><code>uv 0.13.4</code> or later, if used</li>
+      </ul>
+      <p><strong>References:</strong></p>
+      <ul class="refs">
+        <li><strong>Python Packaging guidance:</strong> <a href="https://discuss.python.org/t/information-for-python-users-regarding-emudhra-emsign-ca-certificate-security-incident/109576">https://discuss.python.org/t/information-for-python-users-regarding-emudhra-emsign-ca-certificate-security-incident/109576</a></li>
+        <li><strong>certifi advisory:</strong> <a href="https://github.com/advisories/GHSA-6q48-6c7w-9gw2">https://github.com/advisories/GHSA-6q48-6c7w-9gw2</a></li>
+      </ul>
+
+      <h3>macOS</h3>
+      <p>Homebrew-managed Python may prohibit system-wide pip installation. Use a virtual environment:</p>
+      <pre><code>python3 -m venv .venv
+source .venv/bin/activate
+
+python -m pip install --upgrade \
+  "pip&gt;=26.2.2" \
+  "certifi&gt;=2026.10.19"
+
+python -m pip show pip certifi
+python -c 'import certifi; print(certifi.where())'</code></pre>
+      <p>Repeat the updates in each project environment.</p>
+      <p>If using Python from python.org, follow the Python Packaging guidance for that installation, because its bundled CA certificates can be separate from Homebrew's.</p>
+
+      <h3>Windows</h3>
+      <p>In PowerShell, create or activate your project's virtual environment:</p>
+      <pre><code>py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+python -m pip install --upgrade `
+  "pip&gt;=26.2.2" `
+  "certifi&gt;=2026.10.19"
+
+python -m pip show pip certifi</code></pre>
+
+      <h3>Linux</h3>
+      <p>Activate the project's virtual environment and update packages:</p>
+      <pre><code>python3 -m venv .venv
+source .venv/bin/activate
+
+python -m pip install --upgrade \
+  "pip&gt;=26.2.2" \
+  "certifi&gt;=2026.10.19"</code></pre>
+      <p>Also install your Linux distribution's updated CA certificate package using its package manager, and rebuild affected containers.</p>
+
+      <h3>Test Python TLS</h3>
+      <pre><code>python - &lt;&lt;'PY'
+import urllib.request
+
+url = "https://dv-g3b-emudhra.we-have-a-problem.com/"
+
+try:
+    with urllib.request.urlopen(url, timeout=10) as response:
+        print("HTTP response:", response.status)
+except Exception as exc:
+    print("Connection failed:", type(exc).__name__, exc)
+PY</code></pre>
+      <p>A certificate verification error is the expected result for the affected test endpoint. An HTTP response requires further investigation.</p>
+      <p><strong>Note:</strong> the result applies to this Python process and its current trust configuration. Test other HTTP libraries or custom CA settings used by your application separately.</p>
+    </section>
+
+    <section id="nodejs">
+      <h2>4. Node.js — macOS, Windows and Linux</h2>
+      <p>The official Node.js security releases dated 21 October 2026 include fixes for the eMudhra intermediate CA compromise.</p>
+      <h3>Fixed release versions</h3>
+      <table>
+        <thead><tr><th>Node.js major version</th><th>Fixed release</th></tr></thead>
+        <tbody>
+          <tr><td>Node.js 22.x</td><td>22.23.4</td></tr>
+          <tr><td>Node.js 24.x</td><td>24.22.1</td></tr>
+          <tr><td>Node.js 26.x</td><td>26.12.1</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Official release notes:</strong> <a href="https://nodejs.org/en/blog/vulnerability/october-2026-security-releases">https://nodejs.org/en/blog/vulnerability/october-2026-security-releases</a></p>
+      <p>Upgrade to a fixed release within your supported major version. Use the appropriate installation method for your environment: official installer, version manager, package manager or approved enterprise software deployment.</p>
+      <p><strong>Check the version:</strong></p>
+      <pre><code>node -v
+node -p 'process.arch'</code></pre>
+      <p>Repeat the update in development environments, CI runners, production hosts and container images. Restart affected applications after upgrading.</p>
+      <h3>Test Node.js TLS</h3>
+      <pre><code>node -e '
+require("https").get(
+  "https://dv-g3b-emudhra.we-have-a-problem.com/",
+  res =&gt; {
+    console.log("HTTP response:", res.statusCode);
+    res.resume();
+  }
+).on("error", err =&gt; {
+  console.log("Connection rejected:", err.code || err.message);
+});
+'</code></pre>
+      <p>A certificate-related error is the expected result. A response from the test endpoint warrants investigation.</p>
+      <p>Also test a legitimate HTTPS destination, such as <a href="https://www.apple.com">https://www.apple.com</a>, to make sure normal TLS verification still works.</p>
+    </section>
+
+    <section id="linux-docker">
+      <h2>5. Linux distributions and Docker</h2>
+      <p>Update the OS-provided CA certificate package through the distribution's supported package manager. Rebuild application images and redeploy affected services.</p>
+      <h3>Examples</h3>
+      <p><strong>Ubuntu/Debian:</strong></p>
+      <pre><code>sudo apt-get update
+sudo apt-get install --only-upgrade ca-certificates</code></pre>
+      <p>For other distributions, use the appropriate package manager and the vendor's fixed package version.</p>
+      <p>Do not assume that updating the host updates certificates inside an existing container. Rebuild and redeploy images that bundle CA certificates or Python packages.</p>
+    </section>
+
+    <section id="verification">
+      <h2>6. Final verification checklist</h2>
+      <ul class="checklist">
+        <li>Operating system security updates installed.</li>
+        <li>CA bundle or trust store updated where required.</li>
+        <li>Python pip and certifi updated in every relevant environment.</li>
+        <li>Node.js upgraded to a fixed release.</li>
+        <li>Docker images and CI/CD runtimes rebuilt.</li>
+        <li>Affected test endpoint rejected by each actual application runtime.</li>
+        <li>Legitimate HTTPS endpoints still work.</li>
+        <li>No TLS verification bypasses such as <code>curl -k</code>, <code>rejectUnauthorized: false</code>, or disabled certificate validation were introduced.</li>
+      </ul>
+      <div class="callout warning">
+        <p><strong>Important:</strong> A TLS error, timeout or DNS failure is not always proof of a successful security fix. Confirm that the error is specifically caused by certificate verification. HTTP 200 from the test endpoint is a reason to investigate, but verification must be interpreted in the context of the particular client and trust configuration.</p>
+      </div>
+      <p>For managed or production systems, follow your organization's security guidance and vendor advisories rather than applying an unverified certificate-removal script globally.</p>
+    </section>
+
+    <footer>
+      <p>Technical security advisory · Updated 22 October 2026</p>
+      <p>This document formats the supplied advisory for browser viewing and printing. Technical recommendations have not been independently verified or changed.</p>
+    </footer>
+  </main>
+</body>
+</html>
